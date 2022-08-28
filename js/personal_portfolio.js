@@ -38,8 +38,13 @@
     let dx = 2;
     let dy = -2;
 
+    // =========== SCORE VARS
+    let score = 0;
+
+
     // ============== Clear Game
     function clearGame(){
+
         randBallColor = generateRandHexColor()
         x = canvas.width / 2;
         y = canvas.height - 30;
@@ -99,17 +104,39 @@
           for (let r = 0; r < brickRowCount; r++) {
             let b = bricks[c][r];
             if (b.status == 1) {
+               
                 if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
                     dy = -dy;
                     b.status = 0;
+                    randBallColor = generateRandHexColor()
+                    score++
+                    if (score === brickRowCount * brickColumnCount) {
+                        document.getElementById('genNewGame').innerHTML = "YOU WIN, CONGRATULATIONS!"
+                        setTimeout(function(){
+                            clearInterval(drawBallInterval); 
+                        }, 40)
+                        setTimeout(function(){
+                            document.getElementById('genNewGame').innerHTML = "Play Again"
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        }, 3000)
+                        
+                       
+                      }
                 }
             }
           }
         }
       }
 
+    //   =========== SCORE
+    function drawScore() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#0095DD";
+        ctx.fillText(`Score: ${score}`, 8, 20);
+      }
     // ============== On Click Start Game
     document.getElementById('genNewGame').onclick = function(){
+        document.getElementById('genNewGame').innerHTML = 'Start Game'
         document.getElementById('genNewGame').classList.remove('bg-danger')
         document.getElementById('genNewGame').classList.add('bg-info')
        
@@ -167,10 +194,12 @@
     // =============== Draw
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawBricks()
+        drawBricks();
         drawBall();
-        drawPaddle()
+        drawPaddle();
+        drawScore()
         collisionDetection();
+      
 
         x += dx;
         y += dy;
