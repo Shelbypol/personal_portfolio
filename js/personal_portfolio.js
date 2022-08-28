@@ -65,9 +65,16 @@
         dy = -2;
         rightPressed = false;
         leftPressed = false;
+
+        paddleX = (canvas.width - paddleWidth) / 2;
+        rightPressed = false;
+        leftPressed = false;
     }
     // ============== On Click Start Game
     document.getElementById('genNewGame').onclick = function(){
+        document.getElementById('genNewGame').classList.remove('bg-danger')
+        document.getElementById('genNewGame').classList.add('bg-info')
+       
         clearGame()
         clearInterval(drawBallInterval)
         generateRandHexColor()
@@ -106,8 +113,20 @@
         if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
             dx = -dx;
         }
-        if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
-        dy = -dy;
+        // if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
+        // dy = -dy;
+        // }
+        if(y + dy < ballRadius) {
+            dy = -dy;
+        } else if (y + dy > canvas.height - ballRadius) {
+            // alert("GAME OVER");
+            console.log('GAME OVER')
+            // document.location.reload();
+            clearInterval(drawBallInterval);
+            document.getElementById('genNewGame').classList.remove('bg-info')
+            document.getElementById('genNewGame').classList.add('bg-danger')
+            clearGame()
+            // Needed for Chrome to end game
         }
 
         if (rightPressed) {
